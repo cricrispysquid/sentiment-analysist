@@ -1,0 +1,10 @@
+{
+  "model_type": "TFIDF_FeedForward_NN",
+  "input_dim": 5000,
+  "hidden_dims": [
+    512,
+    256
+  ],
+  "max_features": 5000,
+  "stop_words": "english"
+}
