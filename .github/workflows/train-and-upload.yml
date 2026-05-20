@@ -1,1 +1,52 @@
 
+name: Train & Upload to Hugging Face
+
+on:
+  push:
+    branches: [main, master]
+  workflow_dispatch:
+
+jobs:
+  train-and-push:
+    runs-on: ubuntu-latest
+
+    steps:
+      - uses: actions/checkout@v4
+
+      - name: Setup Python
+        uses: actions/setup-python@v5
+        with:
+          python-version: "3.10"
+
+      - name: Install dependencies
+        run: pip install -r requirements.txt
+
+      - name: Train model
+        run: python train.py
+
+      - name: Upload to Hugging Face
+        env:
+          HF_TOKEN: ${{ secrets.HF_TOKEN }}
+        run: |
+          python - <<'EOF'
+          import os
+          from huggingface_hub import HfApi
+          import glob
+
+          token = os.environ["HF_TOKEN"]
+          REPO_ID = "cricrispysquid/imdb-sentiment-analysis"
+
+          api = HfApi()
+          api.create_repo(REPO_ID, token=token, exist_ok=True)
+
+          for f in glob.glob("model/*"):
+              api.upload_file(
+                  path_or_fileobj=f,
+                  path_in_repo=f,
+                  repo_id=REPO_ID,
+                  token=token,
+              )
+              print(f"Uploaded: {f}")
+
+          print(f"\n✅ 模型已上传: https://huggingface.co/{cricrispysquid/imdb-sentiment-analysis}")
+          EOF
