@@ -48,5 +48,5 @@ jobs:
               )
               print(f"Uploaded: {f}")
 
-          print(f"\n✅ 模型已上传: https://huggingface.co/{cricrispysquid/imdb-sentiment-analysis}")
+          print(f"\n✅ 模型已上传: https://huggingface.co/{REPO_ID}")
           EOF
